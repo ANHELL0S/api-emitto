@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_emitto
+    env_file:
+      - .env.production # Aquí especificas el archivo .env a usar
+    ports:
+      - '4000:4000'
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - emitto-net
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-alvanra
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_DB: db_emitto_dev
+    ports:
+      - '5434:5432'
+    networks:
+      - emitto-net
+
+  redis:
+    image: redis:latest
+    container_name: emitto-redis
+    ports:
+      - '6379:6379'
+    networks:
+      - emitto-net
+
+networks:
+  emitto-net:
+    driver: bridge
