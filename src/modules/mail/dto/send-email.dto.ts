@@ -27,6 +27,7 @@ export class SendEmailDto {
   @IsNotEmpty({ message: 'El campo "subjectEmail" no puede estar vacío.' })
   declare subjectEmail: string
 
+  @IsNotEmpty({ message: 'El campo "subjectEmail" no puede estar vacío.' })
   @IsArray({
     message: 'El campo "sendTo" debe ser un arreglo de correos electrónicos.',
   })

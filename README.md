@@ -143,3 +143,6 @@ docker push anhell0s/api_emitto:latest
 
 sudo nginx -t
 sudo systemctl reload nginx
+
+-- Restart pm2
+NODE_ENV=production pm2 restart api-emitto --update-env
