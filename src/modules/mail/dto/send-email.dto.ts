@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
+  ArrayNotEmpty,
 } from 'class-validator'
 import { Type } from 'class-transformer'
 
@@ -27,7 +28,7 @@ export class SendEmailDto {
   @IsNotEmpty({ message: 'El campo "subjectEmail" no puede estar vacío.' })
   declare subjectEmail: string
 
-  @IsNotEmpty({ message: 'El campo "subjectEmail" no puede estar vacío.' })
+  @ArrayNotEmpty({ message: 'El campo "sendTo" no puede estar vacío.' })
   @IsArray({
     message: 'El campo "sendTo" debe ser un arreglo de correos electrónicos.',
   })
