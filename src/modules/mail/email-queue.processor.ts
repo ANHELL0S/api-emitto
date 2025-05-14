@@ -1,6 +1,13 @@
 import { Job } from 'bull'
-import { Process, Processor } from '@nestjs/bull'
+import {
+  Process,
+  Processor,
+  OnQueueCompleted,
+  OnQueueFailed,
+} from '@nestjs/bull'
 import { EmailProvider } from '@/modules/mail/providers/mail.provider'
+import { unlink } from 'fs/promises'
+import { join } from 'path'
 
 @Processor('emailQueue')
 export class EmailQueueProcessor {
@@ -24,5 +31,49 @@ export class EmailQueueProcessor {
       message,
       attachments,
     )
+  }
+
+  @OnQueueCompleted()
+  async onCompleted(job: Job) {
+    const { attachments } = job.data
+    if (attachments?.length) {
+      await this.deleteAttachments(attachments)
+    }
+  }
+
+  @OnQueueFailed()
+  async onFailed(job: Job) {
+    if (job.attemptsMade >= (job.opts?.attempts || 0)) {
+      const { attachments } = job.data
+      if (attachments?.length) {
+        await this.deleteAttachments(attachments)
+      }
+    }
+  }
+
+  private async deleteAttachments(
+    attachments: { filename: string; path?: string }[],
+  ) {
+    const deletePromises = attachments.map(async (attachment) => {
+      if (!attachment?.path) {
+        console.warn(
+          `Skipping deletion - no path provided for attachment: ${attachment.filename}`,
+        )
+        return
+      }
+
+      try {
+        await unlink(attachment.path)
+        console.log(`File deleted successfully: ${attachment.path}`)
+      } catch (err) {
+        if (err) {
+          console.warn(`File not found, skipping: ${attachment.path}`)
+        } else {
+          console.error(`Error deleting file ${attachment.path}:`, err)
+        }
+      }
+    })
+
+    await Promise.all(deletePromises)
   }
 }

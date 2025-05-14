@@ -9,7 +9,7 @@ import {
 } from 'class-validator'
 import { Type } from 'class-transformer'
 
-class AttachmentDto {
+export class AttachmentDto {
   @IsString()
   declare filename: string
 
@@ -55,4 +55,8 @@ export class SendEmailDto {
   })
   @Type(() => AttachmentDto)
   declare attachments?: AttachmentDto[]
+
+  @IsOptional()
+  @IsString({ message: 'El campo "urlAttachments" debe ser una cadena JSON.' })
+  declare urlAttachments?: string
 }
