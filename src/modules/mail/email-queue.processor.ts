@@ -1,13 +1,12 @@
-import { Job } from 'bull'
 import {
   Process,
   Processor,
-  OnQueueCompleted,
   OnQueueFailed,
+  OnQueueCompleted,
 } from '@nestjs/bull'
-import { EmailProvider } from '@/modules/mail/providers/mail.provider'
+import { Job } from 'bull'
 import { unlink } from 'fs/promises'
-import { join } from 'path'
+import { EmailProvider } from '@/modules/mail/providers/mail.provider'
 
 @Processor('emailQueue')
 export class EmailQueueProcessor {
@@ -24,6 +23,7 @@ export class EmailQueueProcessor {
     }>,
   ) {
     const { from, subjectEmail, sendTo, message, attachments } = job.data
+
     await this.emailProvider.sendEmail(
       from,
       subjectEmail,

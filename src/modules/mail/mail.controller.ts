@@ -44,7 +44,7 @@ export class MailController {
     @UploadedFiles() uploadedFiles: Express.Multer.File[],
   ): Promise<any> {
     console.log('Recibido en el backend:', dto)
-    console.log('Archivos recibidos:', uploadedFiles?.length || 0)
+    // console.log('Archivos recibidos:', uploadedFiles?.length || 0)
 
     try {
       // Inicializar array para todos los adjuntos (combinados)
@@ -56,7 +56,7 @@ export class MailController {
           const urlAttachments = JSON.parse(dto.urlAttachments)
           if (Array.isArray(urlAttachments)) {
             finalAttachments = [...finalAttachments, ...urlAttachments]
-            console.log('URL attachments procesados:', urlAttachments.length)
+            //.log('URL attachments procesados:', urlAttachments.length)
           }
         } catch (e) {
           console.error('Error al parsear urlAttachments:', e)
@@ -70,7 +70,7 @@ export class MailController {
         dto.attachments.length > 0
       ) {
         finalAttachments = [...finalAttachments, ...dto.attachments]
-        console.log('DTO attachments procesados:', dto.attachments.length)
+        //console.log('DTO attachments procesados:', dto.attachments.length)
       }
 
       // 3. Si hay archivos subidos, procesarlos
@@ -78,7 +78,7 @@ export class MailController {
         const uploadedAttachments: AttachmentDto[] = await Promise.all(
           uploadedFiles.map(async (file) => {
             const attachment = await this.emailService.storeFile(file)
-            console.log('Archivo procesado:', file.originalname)
+            //console.log('Archivo procesado:', file.originalname)
             return {
               filename: file.originalname,
               path: attachment.path,
@@ -87,13 +87,13 @@ export class MailController {
         )
 
         finalAttachments = [...finalAttachments, ...uploadedAttachments]
-        console.log('Archivos subidos procesados:', uploadedFiles.length)
+        // console.log('Archivos subidos procesados:', uploadedFiles.length)
       }
 
       // 4. Asignar todos los adjuntos procesados al DTO
       dto.attachments = finalAttachments
 
-      console.log('Total de adjuntos finales:', finalAttachments.length)
+      //console.log('Total de adjuntos finales:', finalAttachments.length)
 
       // 5. Enviar el correo con todos los adjuntos
       const result = await this.emailService.sendEmail(dto)
