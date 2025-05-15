@@ -371,6 +371,8 @@ server {
 }
 ```
 
+#### 2. Crear certificados TSL
+
 #### 2. Crear enlace simbolico
 
 Para habilitar la configuración del sitio emitto-api en NGINX, se debe crear un enlace simbólico desde el archivo de configuración ubicado en sites-available hacia sites-enabled. Esto permite que NGINX reconozca y cargue dicha configuración.
