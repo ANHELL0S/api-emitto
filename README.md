@@ -112,7 +112,7 @@ Este proyecto utiliza un stack moderno basado en **Node.js** y **NestJS**, junto
 
 1. Clona el repositorio
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/ANHELL0S/api-emitto.git
    ```
 2. Install NPM packages
 
@@ -274,7 +274,7 @@ docker run -d \
 #### 1. Clona el repositorio
 
 ```sh
-git clone https://github.com/github_username/repo_name.git
+git clone https://github.com/ANHELL0S/api-emitto.git
 ```
 
 #### 2. Ejecuta la API NestJS con PM2 y compila para producción
