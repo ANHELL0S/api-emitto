@@ -2,9 +2,9 @@
 
 for i in {1..100}
 do
-  curl http://localhost:4000/email/send \
+  curl https://api-emitto.softecsa.com/email/send \
     --request POST \
-    --header 'x-key-emitto: 0b9a3484ba37a24e68ed31d40f0c8f1fca8fa253b9a5dd2793eee16e3a64b316' \
+    --header 'x-key-emitto: 13a5e720b7df3a3164314e879e1e8a6a3c9c74789eb81d948c36b94937bc63b6' \
     --header 'Content-Type: application/json' \
     --data '{
       "from": "aangelogarcia2021@gmail.com",
