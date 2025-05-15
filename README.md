@@ -299,7 +299,46 @@ git clone https://github.com/ANHELL0S/api-emitto.git
 
 ### 4. Configuración de NGINX y Certbot para despliegue seguro
 
-#### 1. Configurar NGINX como Proxy Inverso
+#### 1. Instalar NGINX
+
+- Instalar NGINX:
+
+  ```sh
+  sudo apt-get install nginx
+  ```
+
+- Iniciar el servicio NGINX:
+
+  ```sh
+  sudo systemctl start nginx
+  ```
+
+- Verificar el estado del servicio NGINX:
+
+  ```sh
+  sudo systemctl status nginx
+  ```
+
+- Habilitar el inicio automático (opcional):
+
+  ```sh
+  sudo systemctl enable nginx
+  ```
+
+#### 2. Instalar Certbot
+
+```sh
+sudo apt update
+sudo apt install certbot python3-certbot-nginx -y
+```
+
+#### 3. Crear certidicado SSL - Certbot
+
+```sh
+sudo certbot --nginx -d tudominio.com -d www.tudominio.com
+```
+
+#### 4. Configurar NGINX como Proxy Inverso
 
 Ejemplo básico de configuración de NGINX para redirigir tráfico backend (NestJS API):
 
@@ -371,9 +410,9 @@ server {
 }
 ```
 
-#### 2. Crear certificados TSL
+#### 5. Crear certificados TSL
 
-#### 2. Crear enlace simbolico
+#### 6. Crear enlace simbolico
 
 Para habilitar la configuración del sitio emitto-api en NGINX, se debe crear un enlace simbólico desde el archivo de configuración ubicado en sites-available hacia sites-enabled. Esto permite que NGINX reconozca y cargue dicha configuración.
 
@@ -383,13 +422,13 @@ Ejecuta el siguiente comando con permisos de administrador:
 sudo ln -s /etc/nginx/sites-available/emitto-api /etc/nginx/sites-enabled/
 ```
 
-### 3. Recargar NGINX para aplicar los cambios:
+#### 7. Recargar NGINX para aplicar los cambios
 
 ```bash
 sudo systemctl reload nginx
 ```
 
-### 4. Fix redirecionar tráfico a API
+#### 8. Fix redirecionar tráfico a API
 
 - Si tienes problemas con nginx no redirige el tráfico elimina la conf por defecto de nginx:
 
