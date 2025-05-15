@@ -35,8 +35,11 @@ export class EmailQueueProcessor {
 
   @OnQueueCompleted()
   async onCompleted(job: Job) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { attachments } = job.data
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (attachments?.length) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await this.deleteAttachments(attachments)
     }
   }
@@ -44,8 +47,11 @@ export class EmailQueueProcessor {
   @OnQueueFailed()
   async onFailed(job: Job) {
     if (job.attemptsMade >= (job.opts?.attempts || 0)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { attachments } = job.data
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (attachments?.length) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         await this.deleteAttachments(attachments)
       }
     }

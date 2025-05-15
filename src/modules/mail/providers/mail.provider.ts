@@ -31,12 +31,14 @@ export class EmailProvider {
     html: string,
     attachments?: { filename: string; path: string }[],
   ) {
-    await this.transporter.sendMail({
-      from: from,
-      to: sendTo.join(','),
-      subject: subjectEmail,
-      html: html,
-      attachments,
-    })
+    for (const recipient of sendTo) {
+      await this.transporter.sendMail({
+        from: from,
+        to: recipient,
+        subject: subjectEmail,
+        html: html,
+        attachments,
+      })
+    }
   }
 }

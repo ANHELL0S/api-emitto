@@ -35,7 +35,7 @@ export class SecretKeyController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Throttle({ strict: { limit: 30, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Get()
   @UseGuards(JwtAuthGuard, CookieAuthGuard)
   @DocumentGetAllSecretKeys()
@@ -71,7 +71,7 @@ export class SecretKeyController {
     }
   }
 
-  @Throttle({ strict: { limit: 30, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @DocumentGetSecretKeyById()
@@ -88,7 +88,7 @@ export class SecretKeyController {
     }
   }
 
-  @Throttle({ strict: { limit: 50, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Post()
   @UseGuards(JwtAuthGuard)
   @DocumentCreateSecretKey()
@@ -108,7 +108,7 @@ export class SecretKeyController {
     }
   }
 
-  @Throttle({ strict: { limit: 30, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @DocumentUpdateSecretKey()
@@ -129,7 +129,7 @@ export class SecretKeyController {
     }
   }
 
-  @Throttle({ strict: { limit: 30, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @DocumentDeleteSecretKey()

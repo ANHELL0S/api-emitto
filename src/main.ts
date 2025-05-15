@@ -1,4 +1,4 @@
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
 import { NestFactory } from '@nestjs/core'
 import { Request, Response } from 'express'
@@ -8,10 +8,12 @@ import { Sequelize } from 'sequelize-typescript'
 import { docViewers } from '@/shared/constants/docViews'
 import { morganLogger } from '@/shared/utils/morganLogger.util'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-
 import { createBullBoard } from '@bull-board/api'
 import { ExpressAdapter } from '@bull-board/express'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
+import { createQueueDashExpressMiddleware } from '@queuedash/api'
+import { Queue } from 'bull'
+import { getQueueToken } from '@nestjs/bull'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -87,30 +89,45 @@ async function bootstrap() {
     })
   })
 
-  // ======= CONFIGURACIÓN DE BULL BOARD =======
+  // ======= CONFIGURACIÓN DE COLAS =======
+  // Obtén instancia de Express interna de NestJS
+  const httpAdapter = app.getHttpAdapter()
+  const expressApp = httpAdapter.getInstance()
+
+  // Obtén instancia de la cola registrada en BullModule
+  const emailQueue = app.get<Queue>(getQueueToken('emailQueue'))
+
+  // Crea el middleware de QueueDash
+  const queuedashMiddleware = createQueueDashExpressMiddleware({
+    ctx: {
+      queues: [
+        {
+          queue: emailQueue,
+          displayName: 'Email Queue',
+          type: 'bull',
+        },
+      ],
+    },
+  })
+  // Monta el middleware en la aplicación Express
+  expressApp.use('/queuedash', queuedashMiddleware)
 
   // Configura Bull Board
   const serverAdapter = new ExpressAdapter()
   serverAdapter.setBasePath('/admin/queues')
 
-  // Obtén la instancia de la cola correctamente
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const emailQueue = app.get('BullQueue_emailQueue', { strict: false })
-
   createBullBoard({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     queues: [new BullAdapter(emailQueue)],
     serverAdapter: serverAdapter,
   })
 
-  app.use('/admin/queues', serverAdapter.getRouter())
+  expressApp.use('/admin/queues', serverAdapter.getRouter())
 
   // Start server
   const port = configService.get<number>('PORT', 4000)
   await app.listen(port)
 
   // Startup message
-  const baseUrl = `http://localhost:${port}`
   console.log(`
 ███████╗███╗   ███╗██╗████████╗████████╗ ██████╗ 
 ██╔════╝████╗ ████║██║╚══██╔══╝╚══██╔══╝██╔═══██╗
@@ -123,27 +140,26 @@ async function bootstrap() {
     `💻 Environment: ${configService.get('NODE_ENV') || 'development'}\n`,
   )
 
-  console.log('CORS', corsOrigins)
-
-  // Database sync (development only) - MOVIDO DESPUÉS DE app.listen()
+  // Database sync (only in development)
   if (!isProduction) {
     try {
       const sequelize = app.get(Sequelize)
-      // Verifica la conexión primero
       await sequelize.authenticate()
       console.log('✅ Database connection established')
 
-      // Luego sincroniza
       await sequelize.sync({ alter: true })
-      console.log(`✅ Database synchronized\n`)
+      console.log('✅ Database synchronized')
     } catch (error) {
       console.error('❌ Database error:', error)
-      // No salgas del proceso, solo registra el error
     }
   }
 
-  console.log(`🚀 API run : ${baseUrl}\n`)
-  console.log(`🎯 Bull run: ${baseUrl}/admin/queues'\n`)
+  console.log('\nCORS', corsOrigins)
+
+  const baseUrl = `http://localhost:${port}`
+  console.log(`🚀 API running at ${baseUrl}`)
+  console.log(`🎯 QueueDash at ${baseUrl}/queuedash`)
+  console.log(`📊 Bull Board at ${baseUrl}/admin/queues`)
   console.log(`📚 API Documentation:`)
   docViewers.forEach(({ path, title }) => {
     console.log(`   - ${title} -> ${baseUrl}${path}`)

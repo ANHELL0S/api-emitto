@@ -21,7 +21,7 @@ import { DocumentSigninUser } from '@/modules/auth/docs/swagger/signin.swagger'
 export class AuthController {
   constructor(private readonly commandBus: CommandBus) {}
 
-  @Throttle({ strict: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { ttl: 30000, limit: 3 } })
   @Post('signin')
   @DocumentSigninUser()
   async signin(
@@ -54,7 +54,7 @@ export class AuthController {
     }
   }
 
-  @Throttle({ strict: { limit: 60, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Get('status')
   @UseGuards(JwtAuthGuard)
   @DocumentWithBearerAuth()
@@ -67,7 +67,7 @@ export class AuthController {
     }
   }
 
-  @Throttle({ strict: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   logout(@Res({ passthrough: true }) res: import('express').Response) {

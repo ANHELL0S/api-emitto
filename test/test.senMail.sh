@@ -1,10 +1,10 @@
 #!/bin/bash
 
-for i in {1..20}
+for i in {1..100}
 do
-  curl http://206.189.205.144:4000/email/send \
+  curl http://localhost:4000/email/send \
     --request POST \
-    --header 'x-key-emitto: 0bcb25e9ebcf5b8469cf01d820eadc1c7ec1743cc1e2610dfc7393375c8eccd2' \
+    --header 'x-key-emitto: 0b9a3484ba37a24e68ed31d40f0c8f1fca8fa253b9a5dd2793eee16e3a64b316' \
     --header 'Content-Type: application/json' \
     --data '{
       "from": "aangelogarcia2021@gmail.com",

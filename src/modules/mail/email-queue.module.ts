@@ -17,7 +17,7 @@ import { EmailQueueProcessor } from '@/modules/mail/email-queue.processor'
         duration: 5000, // en 5 segundos
       },
       defaultJobOptions: {
-        removeOnComplete: true, // Eliminar trabajos completados
+        removeOnComplete: false, // Eliminar trabajos completados
         attempts: 3, // Reintentos
         backoff: { type: 'exponential', delay: 1000 }, // Retry exponencial
       },
