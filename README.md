@@ -12,6 +12,10 @@
 
 <!-- ABOUT THE PROJECT -->
 
+## DeepWiki
+
+https://deepwiki.com/ANHELL0S/api-emitto/2.1-email-controller
+
 ## Acerca del proyecto
 
 [![Screenshot-2025-05-13-16-13-10-2726x768.png](https://i.postimg.cc/gJC6rgdG/Screenshot-2025-05-13-16-13-10-2726x768.png)](https://postimg.cc/LYVsbBnW)
