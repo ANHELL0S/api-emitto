@@ -8,11 +8,11 @@ export async function up(queryInterface) {
   const now = new Date()
   const users = []
 
-  const adminPassword = await hash('Shouko2021@@', saltRounds)
+  const adminPassword = await hash('admin_pass', saltRounds)
   users.push({
     _id: uuidv4(),
     name: 'Admin User',
-    email: 'aangelogarcia2021@gmail.com',
+    email: 'admin@gmail.com',
     password: adminPassword,
     isActive: true,
     createdAt: now,

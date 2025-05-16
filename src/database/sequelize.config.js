@@ -4,7 +4,6 @@ const dotenv = require('dotenv')
 const envFile = `.env.${process.env.NODE_ENV || 'development'}`
 dotenv.config({ path: path.resolve(__dirname, '..', '..', envFile) })
 
-console.log(envFile)
 module.exports = {
   development: {
     username: process.env.DB_USER,
